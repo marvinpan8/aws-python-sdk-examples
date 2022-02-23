@@ -4,12 +4,12 @@ from botocore.exceptions import ClientError
 
 
 def create_movie_table():
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.create_table(
+    db = boto3.resource('dynamodb')
+    table = db.create_table(
         TableName='fc_log',
         KeySchema=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'fc_name',
                 'KeyType': 'HASH'  # Partition key
             },
             {
@@ -19,28 +19,27 @@ def create_movie_table():
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'request_id',
+                'AttributeName': 'fc_name',
                 'AttributeType': 'S'  # String
             },
             {
                 'AttributeName': 'duration',
                 'AttributeType': 'N'  # Number
             },
-
         ]
     )
     return table
 
 
 def put_fc_log():
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('cloud_fc_log')
+    db = boto3.resource('dynamodb')
+    table = db.Table('cloud_fc_log')
 
-    for table in dynamodb.tables.all():
+    for table in db.tables.all():
         print(table.name)
 
     try:
-        response = table.put_item(
+        table.put_item(
             Item={
                 'request_id': "00000805-fa5f-4449-8625-102b4876aed5",
                 'duration': 57468,
@@ -49,17 +48,13 @@ def put_fc_log():
                 'fc_name': 'hmm_10d_test',
                 'memory': 512,
                 'remark': 'test',
-                'exec_time': '2022-02-10 18:08:00',
-                'created_time': '2022-02-10 18:08:58'
+                'start_time': 1645610352,
+                'end_time': 1645610360
 
             }
         )
     except ClientError as e:
         print(e.response['Error']['Message'])
-    else:
-        return response['Item']
-
-    return response
 
 
 def lambda_handler(event, context):
