@@ -1,0 +1,16 @@
+.idea
+hmm_raw_data
+hmm_result_data/5d_test/*.zip
+hmm_result_data/10d_test/*.zip
+hmm_result_data/hmm_10year_raw_data.rar
+hmm_result_data/hmm_10year_raw_data
+sqltest
+output/*.xlsx
+raw_data/*.xlsx
+!raw_data/000001_raw_data.xlsx
+!raw_data/000002_raw_data.xlsx
+!raw_data/000004_raw_data.xlsx
+!raw_data/000005_raw_data.xlsx
+!raw_data/000006_raw_data.xlsx
+Model/*.pkl
+hmm_10d_test_layer.zip
