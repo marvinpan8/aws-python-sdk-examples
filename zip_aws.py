@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import warnings
+import urllib.parse
 import zipfile
 from multiprocessing import cpu_count
 
@@ -17,14 +18,13 @@ def lambda_handler(event, context):
     """
     Lambda 内存设置 1024M，超时 15分钟
 
-    zip_name 输出目标文件名
+    zip_name 输出目标文件名，从S3触发器获取
     bucket  S3桶
     src_dir 源文件s3目录
     dst_dir 生成的结果文件s3目录
     zip_dir 输出目标zip文件s3目录
     """
-    zip_name = "hmm-10d-test-result-201307.zip"
-    bucket = "fc-jrtz"
+    bucket = "fc-jrtz-bj"
     src_dir = 'src-hmm-10d-test/'
     dst_dir = 'dst-hmm-10d-test/'
     zip_dir = 'zip-output/'
@@ -33,6 +33,10 @@ def lambda_handler(event, context):
     print("CloudWatch log stream name: ", context.log_stream_name)
     print("CloudWatch log group name: ", context.log_group_name)
     print("Memory limit: ", context.memory_limit_in_mb)
+
+    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    zip_name = os.path.basename(key)
+    print("S3 zip_name ==> ", zip_name)
 
     stm = time.time()
     start_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(stm))
